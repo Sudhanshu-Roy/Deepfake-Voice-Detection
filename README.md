@@ -1,6 +1,6 @@
-# 🎤 Deepfake Voice Detection using Mel Spectrograms and CNN
+# Deepfake Voice Detection using Mel Spectrograms and CNN
 
-## 📌 Problem Statement
+## Problem Statement
 
 The rapid advancement of Generative AI has enabled the creation of highly realistic synthetic voices. Modern voice cloning and deepfake technologies can imitate a person's speech patterns, tone, and pronunciation with remarkable accuracy.
 
@@ -17,12 +17,12 @@ This project presents an end-to-end Deep Learning solution for detecting deepfak
 
 ---
 
-## 🚀 Project Overview
+## Project Overview
 
 The system processes raw audio recordings and classifies them as either:
 
-* ✅ REAL Speech
-* ⚠️ FAKE (AI-Generated) Speech
+* REAL Speech
+* FAKE (AI-Generated) Speech
 
 The complete pipeline includes:
 
@@ -46,7 +46,7 @@ Deepfake Detection
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 The dataset contains both real and AI-generated speech recordings.
 
@@ -66,7 +66,7 @@ Long audio recordings were divided into 1-second chunks to:
 
 ---
 
-## 🔍 Mel Spectrogram Visualization
+## Mel Spectrogram Visualization
 
 Mel Spectrograms transform audio signals into image-like representations that capture both temporal and frequency information.
 
@@ -80,7 +80,7 @@ Mel Spectrograms transform audio signals into image-like representations that ca
 
 ---
 
-## 🧠 CNN Architectures
+## CNN Architectures
 
 Two CNN architectures were evaluated.
 
@@ -152,7 +152,7 @@ Dense(1)
 
 ---
 
-## 📈 Training Curves
+## Training Curves
 
 ### CNN V1 Accuracy
 
@@ -172,7 +172,7 @@ Dense(1)
 
 ---
 
-## 📊 Model Performance
+## Model Performance
 
 | Metric    | CNN V1 | CNN V2 |
 | --------- | ------ | ------ |
@@ -185,7 +185,7 @@ CNN V2 was selected as the final model due to its slightly improved performance 
 
 ---
 
-## 📉 Confusion Matrix
+## Confusion Matrix
 
 ```text
 [[730  19]
@@ -203,7 +203,7 @@ Accuracy  : 96.39%
 
 ---
 
-## 🌐 Streamlit Deployment
+## Streamlit Deployment
 
 A Streamlit application was developed to allow real-time deepfake voice detection.
 
@@ -224,7 +224,7 @@ Users can:
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 * Python
 * TensorFlow / Keras
@@ -236,7 +236,7 @@ Users can:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 Deepfake-Voice-Detection/
@@ -258,7 +258,7 @@ Deepfake-Voice-Detection/
 
 ---
 
-## 🎯 Results
+## Results
 
 The proposed Deepfake Voice Detection system successfully achieved:
 
@@ -271,7 +271,7 @@ The project demonstrates that Mel Spectrograms combined with CNN-based feature e
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 Clone the repository:
 
@@ -308,7 +308,7 @@ pip install -r requirements.txt
 
 ---
 
-## 📥 Download Dataset
+## Download Dataset
 
 ### Automatic Download
 
@@ -334,7 +334,7 @@ https://www.kaggle.com/datasets/birdy654/deep-voice-deepfake-voice-recognition
 
 ---
 
-## ▶️ Run the Streamlit Application
+## Run the Streamlit Application
 
 Start the application using:
 
@@ -353,7 +353,7 @@ Users can:
 
 ---
 
-## 📌 Future Improvements
+## Future Improvements
 
 * Real-time microphone-based detection
 * Audio augmentation techniques
@@ -363,7 +363,7 @@ Users can:
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 **Sudhanshu Roy**
 
