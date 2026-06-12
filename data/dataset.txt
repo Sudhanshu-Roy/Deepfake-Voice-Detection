@@ -1,0 +1,4 @@
+Dataset Download Link:
+https://www.kaggle.com/datasets/birdy654/deep-voice-deepfake-voice-recognition
+
+Download the dataset and place the extracted files inside the data/ directory before running the project.
