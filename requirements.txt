@@ -1,8 +1,7 @@
-tensorflow
 streamlit
+tensorflow==2.16.1
 numpy
 pandas
-matplotlib
-librosa
+pillow
 scikit-learn
-soundfile
+opencv-python-headless
