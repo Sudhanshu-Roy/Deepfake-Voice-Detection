@@ -15,6 +15,8 @@ Detecting AI-generated speech has therefore become an important challenge in mod
 
 This project presents an end-to-end Deep Learning solution for detecting deepfake audio using Mel Spectrogram representations and Convolutional Neural Networks (CNNs).
 
+Live Demo = https://deepfake-voice-detector-tawny.vercel.app
+
 ---
 
 ## Project Overview
@@ -249,6 +251,10 @@ Create a Web Service from this repository:
 * Start command: `python -m uvicorn main:app --host 0.0.0.0 --port $PORT`
 
 Set this environment variable on Render:
+
+```text
+PYTHON_VERSION=3.11.11 
+```
 
 ```text
 CORS_ORIGINS=https://your-app.vercel.app
