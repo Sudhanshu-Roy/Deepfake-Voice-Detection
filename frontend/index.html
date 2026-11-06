@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deepfake Voice Detector</title>
+  <meta name="description" content="Upload a WAV audio file and the model will determine whether it is REAL or FAKE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Mel spectrogram · CNN</p>
+    <h1>Deepfake Voice Detector</h1>
+    <p class="lede">Upload a WAV audio file and the model will determine whether it is REAL or FAKE.</p>
+
+    <form id="detector">
+      <label class="drop" id="drop" for="file">
+        <input id="file" type="file" accept=".wav,audio/wav,audio/x-wav">
+        <span class="drop-title">Choose a WAV file</span>
+        <span class="drop-hint">or drop it here</span>
+      </label>
+
+      <p id="file-meta" class="meta" hidden></p>
+      <audio id="player" controls hidden></audio>
+
+      <div class="samples">
+        <p class="samples-label">Try a sample from the training set</p>
+        <div class="sample-row">
+          <button type="button" class="sample" data-sample="/samples/biden.wav" data-name="biden.wav">Real sample</button>
+          <button type="button" class="sample" data-sample="/samples/obama-to-biden.wav" data-name="obama-to-biden.wav">Fake sample</button>
+        </div>
+      </div>
+
+      <button type="submit" id="predict" disabled>Predict</button>
+    </form>
+
+    <p id="status" class="status" role="status"></p>
+
+    <section id="result" class="result" hidden aria-live="polite">
+      <p class="result-label">Prediction</p>
+      <p id="prediction" class="prediction"></p>
+      <p class="confidence-label">Confidence</p>
+      <p id="confidence" class="confidence"></p>
+    </section>
+
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

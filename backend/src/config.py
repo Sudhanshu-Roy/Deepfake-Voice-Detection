@@ -1,0 +1,4 @@
+SR = 16000
+CHUNK_DURATION = 1  # seconds
+N_MELS = 128
+THRESHOLD = 0.5

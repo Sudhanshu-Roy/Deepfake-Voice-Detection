@@ -49,7 +49,7 @@ def build_model():
 model = build_model()
 
 model.load_weights(
-    "models\weights_best_2.weights.h5"
+    "backend/models/weights_best_2.weights.h5"
 )
 
 def predict_audio(file_path):

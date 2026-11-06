@@ -44,16 +44,30 @@ Convolutional Neural Network (CNN)
 Deepfake Detection
 ```
 
+The deployed application is split into two parts:
+
+* **frontend/** is the website. Visitors upload a WAV file, or try a sample from the training set, and see a REAL or FAKE result with a confidence score.
+* **backend/** is the API. It checks that the request comes from the website, builds the Mel spectrogram, and runs the trained CNN.
+
+The original Streamlit app is still in the repository as `app.py`.
+
 ---
 
 ## Dataset
 
-The dataset contains both real and AI-generated speech recordings.
+The model was trained on the [DEEP-VOICE dataset](https://www.kaggle.com/datasets/birdy654/deep-voice-deepfake-voice-recognition).
 
 ### Structure
 
 * REAL audio samples
 * FAKE audio samples generated through voice conversion techniques
+
+Recordings used for training belong in:
+
+```text
+data/KAGGLE/AUDIO/REAL
+data/KAGGLE/AUDIO/FAKE
+```
 
 ### Processing Strategy
 
@@ -63,6 +77,15 @@ Long audio recordings were divided into 1-second chunks to:
 * Improve model generalization
 * Capture local speech characteristics
 * Detect deepfake artifacts more effectively
+
+The website includes two short clips from this dataset:
+
+| Button | File | What it is |
+| --- | --- | --- |
+| Real sample | `frontend/public/samples/biden.wav` | Biden's original voice |
+| Fake sample | `frontend/public/samples/obama-to-biden.wav` | Obama's speech converted into Biden's voice |
+
+The buttons are labeled Real sample and Fake sample. The filenames record which speaker was converted.
 
 ---
 
@@ -150,6 +173,8 @@ Dense(64)
 Dense(1)
 ```
 
+Inference rebuilds CNN V2 and loads `backend/models/weights_best_2.weights.h5`. The weight file is not stored in this repository. Place it in that folder before starting the API.
+
 ---
 
 ## Training Curves
@@ -203,36 +228,64 @@ Accuracy  : 96.39%
 
 ---
 
-## Streamlit Deployment
+## Web Application
 
-A Streamlit application was developed to allow real-time deepfake voice detection.
+Visitors can:
 
-### Real Voice Prediction
+* Upload a WAV file of at least 1 second, up to 25 MB
+* Play the selected audio
+* Try the real and fake training samples
+* Receive a REAL or FAKE prediction
+* View the model confidence score
 
-![Real Prediction](assets/streamlit_real.png)
+The page sends the audio to `POST /predict`. The API only scores a request whose browser origin is listed in `CORS_ORIGINS`. A request from another site receives `403` and the model does not run. `GET /health` stays open so the host can check that the service is up.
 
-### Fake Voice Prediction
+### Deploy the API on Render
 
-![Fake Prediction](assets/streamlit_fake.png)
+Create a Web Service from this repository:
 
-Users can:
+* Root Directory: `backend`
+* Build command: `pip install -r requirements.txt`
+* Start command: `python -m uvicorn main:app --host 0.0.0.0 --port $PORT`
 
-* Upload a WAV audio file
-* Listen to the uploaded audio
-* Receive REAL or FAKE predictions
-* View model confidence scores
+Set this environment variable on Render:
+
+```text
+CORS_ORIGINS=https://your-app.vercel.app
+```
+
+Use the exact site address, with no trailing slash. `*` is rejected. For a local site and the deployed site together, separate the addresses with a comma:
+
+```text
+CORS_ORIGINS=https://your-app.vercel.app,http://127.0.0.1:5173
+```
+
+The service needs the weight file at `backend/models/weights_best_2.weights.h5`. TensorFlow needs an instance with at least 2 GB of RAM.
+
+### Deploy the website on Vercel
+
+In the Vercel project:
+
+* Root Directory: `frontend`
+* Environment variable: `VITE_API_BASE_URL=https://your-api.onrender.com`
+
+Use the Render address with no trailing slash. Vercel reads that variable while it builds the site. The page does not ask visitors for the API address.
 
 ---
 
 ## Technologies Used
 
-* Python
+* Python 3.11 or 3.12
 * TensorFlow / Keras
 * Librosa
 * NumPy
-* Scikit-Learn
-* Matplotlib
-* Streamlit
+* FastAPI
+* Vite
+* Vercel
+* Render
+* Streamlit, for the original local app
+
+TensorFlow 2.16 does not run on Python 3.13.
 
 ---
 
@@ -240,21 +293,39 @@ Users can:
 
 ```text
 Deepfake-Voice-Detection/
-
-├── data/
-│   └── dataset.txt
-├── download_dataset.py
+├── frontend/
+│   ├── index.html
+│   ├── app.js
+│   ├── styles.css
+│   ├── public/samples/
+│   │   ├── biden.wav
+│   │   └── obama-to-biden.wav
+│   ├── .env.example
+│   └── package.json
+├── backend/
+│   ├── main.py
+│   ├── origin_guard.py
+│   ├── requirements.txt
+│   ├── runtime.txt
+│   ├── Procfile
+│   ├── .env.example
+│   ├── models/
+│   │   └── weights_best_2.weights.h5
+│   └── src/
+│       ├── config.py
+│       ├── preprocess.py
+│       └── predict.py
 ├── app.py
-├── models/
-├── notebooks/
 ├── src/
-│   ├── preprocess.py
-│   ├── predict.py
-│   └── config.py
+├── notebooks/
 ├── assets/
-├── requirements.txt
+├── data/
+├── download_dataset.py
+├── render.yaml
 └── README.md
 ```
+
+`backend/.env` and `frontend/.env` are listed in `.gitignore`, so local addresses are not committed. Copy each `.env.example` file to `.env` when running on your own machine.
 
 ---
 
@@ -271,7 +342,7 @@ The project demonstrates that Mel Spectrograms combined with CNN-based feature e
 
 ---
 
-## Installation
+## Run the API locally
 
 Clone the repository:
 
@@ -280,13 +351,12 @@ git clone https://github.com/Sudhanshu-Roy/Deepfake-Voice-Detection.git
 cd Deepfake-Voice-Detection
 ```
 
-Create a virtual environment (recommended):
+Use Python 3.11 or 3.12:
 
 ```bash
+cd backend
 python -m venv venv
 ```
-
-Activate the virtual environment:
 
 ### Windows
 
@@ -300,10 +370,66 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-Install the required dependencies:
+Install the API dependencies and add the weight file:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Place `weights_best_2.weights.h5` in `backend/models/`. Then create the local environment file:
+
+```bash
+copy .env.example .env
+```
+
+On Linux or macOS, use `cp .env.example .env`. Set `CORS_ORIGINS` to the local website address:
+
+```text
+CORS_ORIGINS=http://127.0.0.1:5173,http://localhost:5173
+```
+
+Start the API:
+
+```bash
+python -m uvicorn main:app --host 127.0.0.1 --port 8000
+```
+
+`GET http://127.0.0.1:8000/health` returns `{"status":"ok"}` when the server is ready.
+
+---
+
+## Run the website locally
+
+From `frontend/`:
+
+```bash
+npm install
+copy .env.example .env
+```
+
+Set the API address:
+
+```text
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+Start the site:
+
+```bash
+npm run dev
+```
+
+Open http://127.0.0.1:5173/. The dev server prints the exact address.
+
+---
+
+## Original Streamlit app
+
+`app.py` is the original single-file interface. It expects the same weight file at `models/weights_best_2.weights.h5` in the repository root and uses the packages in the root `requirements.txt`.
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
 ```
 
 ---
@@ -332,24 +458,7 @@ Download directly from Kaggle:
 
 https://www.kaggle.com/datasets/birdy654/deep-voice-deepfake-voice-recognition
 
----
-
-## Run the Streamlit Application
-
-Start the application using:
-
-```bash
-streamlit run app.py
-```
-
-The application will open automatically in your browser.
-
-Users can:
-
-* Upload a WAV audio file
-* Listen to the uploaded audio
-* Detect whether the voice is REAL or FAKE
-* View prediction confidence
+Place the extracted `KAGGLE/AUDIO` folders inside `data/` before training.
 
 ---
 
@@ -369,6 +478,6 @@ Users can:
 
 ---
 
-## ⭐ Support
+## Support
 
 If you found this project useful, consider giving it a star on GitHub. It helps others discover the project and motivates future improvements.
